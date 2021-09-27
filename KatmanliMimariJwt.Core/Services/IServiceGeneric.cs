@@ -14,8 +14,8 @@ namespace KatmanliMimariJwt.Core.Services
         Task<Response<IEnumerable<TDto>>> GetAllAsync();
         //Where içerisindeki parametre bir delegate'dir TEntity verip Bool döndürecek
         Task<Response<IEnumerable<TDto>>> Where(Expression<Func<TEntity, bool>> predicate);
-        Task<Response<TDto>> AddAsync(TEntity entity);
-        Task<Response<NoDataDto>> Remove(TEntity entity);
-        Task<Response<NoDataDto>> Update(TEntity entity); //Geri dönüşte veri göstermemek için yazılan DTO'lar 
+        Task<Response<TDto>> AddAsync(TDto entity);
+        Task<Response<NoDataDto>> Remove(int id);
+        Task<Response<NoDataDto>> Update(TDto entity,int id); //Geri dönüşte veri göstermemek için yazılan DTO'lar 
     }
 }
