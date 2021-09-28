@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace KatmanliMimariJwt.Service.Services
 {
-    internal static class SignService
+    public static class SignService
     {
         public static SecurityKey GetSymetricSecurityKey(string securityKey) 
         {

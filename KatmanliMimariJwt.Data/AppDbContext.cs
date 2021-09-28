@@ -21,6 +21,7 @@ namespace KatmanliMimariJwt.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(GetType().Assembly); //Bu assembly'deki DLL'deki interface'leri bul
+            base.OnModelCreating(builder);
         }
     }
 }

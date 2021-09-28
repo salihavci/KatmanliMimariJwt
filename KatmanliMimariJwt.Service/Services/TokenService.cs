@@ -60,25 +60,34 @@ namespace KatmanliMimariJwt.Service.Services
 
         public TokenDto CreateToken(UserApp userApp)
         {
-            var AccessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
-            var RefreshTokenExpiraton = DateTime.Now.AddMinutes(_tokenOptions.RefreshTokenExpiration);
-            var SecurityKey = SignService.GetSymetricSecurityKey(_tokenOptions.SecurityKey);
-            SigningCredentials signingCredentials = new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256Signature);
-            JwtSecurityToken jwtSecurityToken = new JwtSecurityToken(
-                issuer:_tokenOptions.Issuer,
-                expires:AccessTokenExpiration,
-                notBefore:DateTime.Now,
-                claims:GetClaim(userApp,_tokenOptions.Audience),
-                signingCredentials:signingCredentials);
-            var handler = new JwtSecurityTokenHandler();
-            var AccessToken = handler.WriteToken(jwtSecurityToken);
-            var TokenDto = new TokenDto {
-                AccessToken = AccessToken,
-                AccessTokenExpiration = AccessTokenExpiration,
-                RefreshToken = CreateRefreshToken(),
-                RefreshTokenExpiration = RefreshTokenExpiraton
-            };
-            return TokenDto;
+            try
+            {
+                var AccessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
+                var RefreshTokenExpiraton = DateTime.Now.AddMinutes(_tokenOptions.RefreshTokenExpiration);
+                var SecurityKey = SignService.GetSymetricSecurityKey(_tokenOptions.SecurityKey);
+                SigningCredentials signingCredentials = new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256Signature);
+                JwtSecurityToken jwtSecurityToken = new JwtSecurityToken(
+                    issuer: _tokenOptions.Issuer,
+                    expires: AccessTokenExpiration,
+                    notBefore: DateTime.Now,
+                    claims: GetClaim(userApp, _tokenOptions.Audience),
+                    signingCredentials: signingCredentials);
+                var handler = new JwtSecurityTokenHandler();
+                var AccessToken = handler.WriteToken(jwtSecurityToken);
+                var TokenDto = new TokenDto
+                {
+                    AccessToken = AccessToken,
+                    AccessTokenExpiration = AccessTokenExpiration,
+                    RefreshToken = CreateRefreshToken(),
+                    RefreshTokenExpiration = RefreshTokenExpiraton
+                };
+                return TokenDto;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+           
         }
 
         public ClientTokenDto TokenByClient(Client client)
