@@ -13,6 +13,6 @@ namespace KatmanliMimariJwt.Core.Services
         Task<Response<TokenDto>> CreateToken(LoginDto login);
         Task<Response<TokenDto>> CreateTokenByRefreshToken(string refreshToken);
         Task<Response<NoDataDto>> RevokeRefreshToken(string refreshToken);
-        Task<Response<ClientTokenDto>> CreateTokenByClient(ClientLoginDto clientLogin);
+        Response<ClientTokenDto> CreateTokenByClient(ClientLoginDto clientLogin);
     }
 }
