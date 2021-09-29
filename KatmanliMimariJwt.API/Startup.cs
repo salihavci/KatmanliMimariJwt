@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using KatmanliMimariJwt.Core.Configurations;
 using KatmanliMimariJwt.Core.Models;
 using KatmanliMimariJwt.Core.Repositories;
@@ -19,6 +20,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using SharedLibrary.Configurations;
+using SharedLibrary.Extensions;
+using SharedLibrary.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,8 +87,11 @@ namespace KatmanliMimariJwt.API
             });
 
             //-----------------------------Token Authorization Injection End--------------------------
-
-            services.AddControllers();
+            
+            services.AddControllers().AddFluentValidation(options => {
+                options.RegisterValidatorsFromAssemblyContaining<Startup>();
+            });
+            services.UseCustomValidationResponse();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "KatmanliMimariJwt.API", Version = "v1" });
@@ -101,6 +107,11 @@ namespace KatmanliMimariJwt.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "KatmanliMimariJwt.API v1"));
             }
+            else
+            {
+                //app.UseCustomExceptionHandle();
+            }
+            app.UseCustomExceptionHandle();
 
             app.UseHttpsRedirection();
 

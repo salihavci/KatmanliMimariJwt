@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KatmanliMimariJwt.Service.Services
+namespace SharedLibrary.Services
 {
     public static class SignService
     {
-        public static SecurityKey GetSymetricSecurityKey(string securityKey) 
+        public static SecurityKey GetSymetricSecurityKey(string securityKey)
         {
             return new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey));
         }
