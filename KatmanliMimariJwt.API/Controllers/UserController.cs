@@ -3,6 +3,7 @@ using KatmanliMimariJwt.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using SharedLibrary.Exceptions;
 using SharedLibrary.Extensions;
 using System;
@@ -26,7 +27,7 @@ namespace KatmanliMimariJwt.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(CreateUserDto createUserDto)
         {
-            throw new CustomException("Veritabanı ile ilgili bir hata meydana geldi.");
+            //throw new CustomException("Veritabanı ile ilgili bir hata meydana geldi.");
             var result = await _userService.CreateUserAsync(createUserDto);
             return ActionResultInstance(result);
         }
@@ -37,6 +38,12 @@ namespace KatmanliMimariJwt.API.Controllers
         {
             var result = await _userService.GetUserByNameAsync(HttpContext.User.Identity.Name);
             return ActionResultInstance(result);
+        }
+
+        [HttpPost("CreateUserRoles/{username}")]
+        public async Task<IActionResult> CreateUserRoles(string username)
+        {
+            return ActionResultInstance(await _userService.CreateUserRoles(username));
         }
     }
 }

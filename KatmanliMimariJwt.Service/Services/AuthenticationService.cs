@@ -39,7 +39,7 @@ namespace KatmanliMimariJwt.Service.Services
             var user = await _userManager.FindByEmailAsync(login.Email);
             if (user == null) return Response<TokenDto>.Fail("Email or password is wrong.", 400, true);
             if (!await _userManager.CheckPasswordAsync(user, login.Password)) return Response<TokenDto>.Fail("Email or password is wrong.", 400, true);
-            var token = _tokenService.CreateToken(user);
+            var token = await _tokenService.CreateToken(user);
             var userRefreshToken = await _userRefreshTokenService.Where(x => x.UserId == user.Id).SingleOrDefaultAsync();
             if (userRefreshToken == null) await _userRefreshTokenService.AddAsync(new UserRefreshToken { UserId = user.Id, Code = token.RefreshToken, Expiraton = token.RefreshTokenExpiration });
             else
@@ -66,7 +66,7 @@ namespace KatmanliMimariJwt.Service.Services
             if (existRefreshToken == null) return Response<TokenDto>.Fail("Refresh token not found.", 404, true);
             var user = await _userManager.FindByIdAsync(existRefreshToken.UserId);
             if (user == null) return Response<TokenDto>.Fail("User id not found", 404, true);
-            var token = _tokenService.CreateToken(user);
+            var token = await _tokenService.CreateToken(user);
             existRefreshToken.Code = token.RefreshToken;
             existRefreshToken.Expiraton = token.RefreshTokenExpiration;
             await _unitOfWork.CommitAsync();

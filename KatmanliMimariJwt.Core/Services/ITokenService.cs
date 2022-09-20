@@ -11,7 +11,7 @@ namespace KatmanliMimariJwt.Core.Services
 {
     public interface ITokenService
     {
-        TokenDto CreateToken(UserApp userApp);
+        Task<TokenDto> CreateToken(UserApp userApp);
         ClientTokenDto TokenByClient(Client client);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using KatmanliMimariJwt.Core.DTOs;
+using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.DTOs;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,6 @@ namespace KatmanliMimariJwt.Core.Services
     {
         Task<Response<UserAppDto>> CreateUserAsync(CreateUserDto createUser);
         Task<Response<UserAppDto>> GetUserByNameAsync(string userName);
+        Task<Response<NoContentResult>> CreateUserRoles(string username);
     }
 }

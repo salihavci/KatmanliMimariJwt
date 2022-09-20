@@ -37,15 +37,19 @@ namespace KatmanliMimariJwt.Service.Services
             return Convert.ToBase64String(numberByte);
         }
 
-        private IEnumerable<Claim> GetClaim(UserApp userApp, List<String> Audiences)
+        private async Task<IEnumerable<Claim>> GetClaim(UserApp userApp, List<String> Audiences)
         {
+            var userRoles = await _userManager.GetRolesAsync(userApp).ConfigureAwait(false);
             var userList = new List<Claim> {
                 new Claim(ClaimTypes.NameIdentifier,userApp.Id),
                 new Claim(JwtRegisteredClaimNames.Email,userApp.Email),
                 new Claim(ClaimTypes.Name,userApp.UserName),
-                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()) //Claim ID'si olacak
+                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()), //Claim ID'si olacak
+                new Claim("city",userApp.City),
+                new Claim("birthDate",userApp.BirthDate.ToShortDateString())
             };
             userList.AddRange(Audiences.Select(x => new Claim(JwtRegisteredClaimNames.Aud, x)));
+            userList.AddRange(userRoles.Select(x => new Claim(ClaimTypes.Role, x))); //Rol bazlı claim kaydetme ve yetki verme.
             return userList;
         }
 
@@ -59,7 +63,7 @@ namespace KatmanliMimariJwt.Service.Services
 
         }
 
-        public TokenDto CreateToken(UserApp userApp)
+        public async Task<TokenDto> CreateToken(UserApp userApp)
         {
 
             var AccessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
@@ -70,7 +74,7 @@ namespace KatmanliMimariJwt.Service.Services
                 issuer: _tokenOptions.Issuer,
                 expires: AccessTokenExpiration,
                 notBefore: DateTime.Now,
-                claims: GetClaim(userApp, _tokenOptions.Audience),
+                claims: await GetClaim(userApp, _tokenOptions.Audience),
                 signingCredentials: signingCredentials);
             var handler = new JwtSecurityTokenHandler();
             var AccessToken = handler.WriteToken(jwtSecurityToken);

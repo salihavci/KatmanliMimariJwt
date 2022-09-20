@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace MiniApp1.API.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "AgePolicy")]
+    [Authorize(Roles = "Admin",Policy = "CityPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class StockController : ControllerBase
